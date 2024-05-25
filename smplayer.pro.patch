@@ -1,0 +1,31 @@
+diff --git a/src/smplayer.pro b/src/smplayer.pro
+index 5693782..9f6367e 100644
+--- a/src/smplayer.pro
++++ b/src/smplayer.pro
+@@ -103,7 +103,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
+ 	QT += widgets gui
+ 	#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x040000
+ 	win32 {
+-		#DEFINES -= MPRIS2
++		DEFINES -= MPRIS2
+ 	}
+ }
+ greaterThan(QT_MAJOR_VERSION,5) {
+@@ -441,7 +441,7 @@ contains( DEFINES, DOWNLOAD_SUBS ) {
+ 		INCLUDEPATH += ..\zlib
+ 		LIBS += -L..\zlib
+ 		
+-		win32-msvc* {
++		win32-arm* {
+ 			LIBS += -lzlib
+ 		} else {
+ 			LIBS += -lz
+@@ -697,7 +697,7 @@ win32 {
+ 		FORMS += prefassociations.ui
+ 	}
+ 
+-	win32-msvc* {
++	win32-arm64* {
+ 		LIBS += -luser32 -lole32
+ 	} else {
+ 		LIBS += libole32

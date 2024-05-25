@@ -1,0 +1,81 @@
+name: Build for Windows ARM64
+
+on:
+  push:
+
+jobs:
+  build-windows-arm64:
+    name: Build
+    runs-on: windows-latest
+    continue-on-error: true
+    env:
+      qt_version: "5.15.12"
+      qt_path: "${{ github.workspace }}/qt-msvc-arm64"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup devcmd
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64_arm64
+
+      - name: Install build tools
+        run: |
+          choco install jom 
+
+      # use the preinstalled vcpkg from image
+      # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md#package-management
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v10
+        with:
+          vcpkgDirectory: C:/vcpkg
+          doNotUpdateVcpkg: true  # the preinstalled vcpkg is updated regularly
+
+      - name: Install dependencies from vcpkg
+        run: |
+          # clear buildtrees after each package installation to reduce disk space requirements
+          $packages = "zlib:arm64-windows"
+          ${{ env.RUNVCPKG_VCPKG_ROOT }}/vcpkg.exe upgrade `
+            --no-dry-run
+          ${{ env.RUNVCPKG_VCPKG_ROOT }}/vcpkg.exe install `
+            --clean-after-build `
+            $packages
+
+      - name: Setup devcmd
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.qt_path }}
+          key: ${{ runner.os }}-msvc-qt-${{ env.qt_version }}-arm64
+
+      - name: Install Qt (arm64)
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        run: |
+          git clone https://github.com/qt/qt5.git qt5
+          cd qt5
+          git checkout "v${{ env.qt_version }}-lts-lgpl"
+          perl init-repository --module-subset=qtbase,qtsvg,qttools,qtimageformats,qttranslations,qtdeclarative
+          ./configure -opensource -confirm-license -nomake tests -nomake examples `
+            -schannel -no-icu -system-zlib -qt-sqlite -sql-sqlite -no-sql-mysql -no-sql-odbc -no-sql-psql `
+            -release -platform win32-msvc -xplatform win32-arm64-msvc2017 -prefix "${{ env.qt_path }}" `
+            ZLIB_PREFIX="${{ env.RUNVCPKG_VCPKG_ROOT }}\installed\arm64-windows"
+          jom
+          jom install
+
+      - name: Setup devcmd
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64_arm64
+          
+      - name: Install Smplayer
+        run: |
+          $qt_install_dir = "${{ env.qt_path }}"
+          $vcpkg_dir = "${{ env.RUNVCPKG_VCPKG_ROOT }}"
+          ./build.ps1      
