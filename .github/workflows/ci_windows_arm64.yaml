@@ -7,7 +7,6 @@ jobs:
   build-windows-arm64:
     name: Build
     runs-on: windows-latest
-    continue-on-error: true
     env:
       qt_version: "5.15.12"
       qt_path: "${{ github.workspace }}/qt-msvc-arm64"
@@ -79,3 +78,17 @@ jobs:
           $qt_install_dir = "${{ env.qt_path }}"
           $vcpkg_dir = "${{ env.RUNVCPKG_VCPKG_ROOT }}"
           ./build.ps1      
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: smplayer_arm64
+          path: smplayer-portable-*.7z
+
+      - name: Batch release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: smplayer-portable-*.7z
