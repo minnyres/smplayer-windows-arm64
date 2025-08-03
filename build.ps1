@@ -180,7 +180,7 @@ cp $smplayer_skins_dir\themes\Mint-Y\main.css .\themes\Mint-Y\
 $mpv_version = '0.40.0'
 cd ..
 aria2c https://github.com/minnyres/mpv-windows-arm64/releases/download/v${mpv_version}/mpv_${mpv_version}_arm64.7z
-7z x mpv_v${mpv_version}_arm64.7z
+7z x mpv_${mpv_version}_arm64.7z
 mkdir $output_dir/mpv
 cp mpv/bin/mpv.exe $output_dir/mpv
 cp mpv/bin/vulkan*.dll $output_dir/mpv
