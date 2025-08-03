@@ -4,7 +4,7 @@ $env:path += ";$qt_install_dir\bin;"
 $work_dir = $pwd
 
 # sources
-$smp_version = '24.6.0'
+$smp_version = '25.6.0'
 git clone --depth 1 https://github.com/smplayer-dev/smplayer-build.git
 cd smplayer-build
 git clone --depth 1 https://github.com/smplayer-dev/smplayer-themes.git packages\smplayer-themes
