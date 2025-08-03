@@ -79,7 +79,7 @@ jobs:
           ./build.ps1      
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: smplayer_arm64
           path: smplayer-portable-*.7z
