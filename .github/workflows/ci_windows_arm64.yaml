@@ -8,7 +8,7 @@ jobs:
     name: Build
     runs-on: windows-latest
     env:
-      qt_version: "5.15.12"
+      qt_version: "5.15.17"
       qt_path: "${{ github.workspace }}/qt-msvc-arm64"
 
     steps:
@@ -24,13 +24,12 @@ jobs:
         run: |
           choco install jom 
 
-      # use the preinstalled vcpkg from image
-      # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md#package-management
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v10
+      - name: Setup a new (or from cache) vcpkg (and does not build any package)
+        uses: lukka/run-vcpkg@v11 # Always specify the specific _version_ of the
+                                  # action you need, `v11` in this case to stay up
+                                  # to date with fixes on the v11 branch
         with:
-          vcpkgDirectory: C:/vcpkg
-          doNotUpdateVcpkg: true  # the preinstalled vcpkg is updated regularly
+          vcpkgGitCommitId: 'dd3097e305afa53f7b4312371f62058d2e665320'
 
       - name: Install dependencies from vcpkg
         run: |

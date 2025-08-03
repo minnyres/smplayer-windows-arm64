@@ -4,7 +4,7 @@ $env:path += ";$qt_install_dir\bin;"
 $work_dir = $pwd
 
 # sources
-$smp_version = '24.5.0'
+$smp_version = '24.6.0'
 git clone --depth 1 https://github.com/smplayer-dev/smplayer-build.git
 cd smplayer-build
 git clone --depth 1 https://github.com/smplayer-dev/smplayer-themes.git packages\smplayer-themes
@@ -177,7 +177,7 @@ cp $smplayer_skins_dir\themes\Mint-Y\README.txt .\themes\Mint-Y\
 cp $smplayer_skins_dir\themes\Mint-Y\main.css .\themes\Mint-Y\
 
 # mpv
-$mpv_version = '0.38.0'
+$mpv_version = '0.40.0'
 cd ..
 aria2c https://github.com/minnyres/mpv-windows-arm64/releases/download/v${mpv_version}/mpv_v${mpv_version}_arm64.7z
 7z x mpv_v${mpv_version}_arm64.7z
